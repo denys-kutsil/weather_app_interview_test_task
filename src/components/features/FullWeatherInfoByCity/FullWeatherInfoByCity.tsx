@@ -9,8 +9,7 @@ import { styles } from './styles';
 import { useFullWeatherInfoByCity } from './useFullWeatherInfoByCity';
 
 const FullWeatherInfoByCity = () => {
-  const { currentWeather, weatherForCurrentDay, isLoading, currentCity } =
-    useFullWeatherInfoByCity();
+  const { city, currentWeather, weatherForCurrentDay, isLoading } = useFullWeatherInfoByCity();
 
   return (
     <Box style={styles.container}>
@@ -24,7 +23,7 @@ const FullWeatherInfoByCity = () => {
           {!!weatherForCurrentDay && (
             <>
               <PreviewWeatherInfo {...weatherForCurrentDay} />
-              <ForecastList city={currentCity} />
+              <ForecastList city={city} />
             </>
           )}
         </LoadingStateWrapper>

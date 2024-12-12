@@ -1,19 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import { fetchCityByUserGeoLocation } from '@/api';
+import { useFetchCityByGeoLocation } from '@/hooks';
 
 export const useCityByGeolocationProvider = () => {
   const [isCurrentPositionLoading, setIsCurrentPositionLoading] = useState(true);
   const [coords, setCoords] = useState<null | GeolocationCoordinates>(null);
 
-  const { data, isLoading: isCityLoading } = useQuery({
-    queryKey: ['city_by_geo_location', coords],
-    queryFn: () => coords && fetchCityByUserGeoLocation(coords),
-    enabled: !!coords,
-  });
+  const { data, isLoading: isCityLoading } = useFetchCityByGeoLocation(coords);
 
   const cityByGeoLocation = data?.city ?? null;
 

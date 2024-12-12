@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
-import { fetchWeatherDataForThisDay } from '@/api';
 import { useCityByGeolocation } from '@/context';
+import { useFetchWeatherForThisDayQuery } from '@/hooks';
 import { useCitySearch, useHistoryOfCitiesSearchingStore } from '@/store';
 
 export const useFullWeatherInfoByCity = () => {
@@ -12,15 +10,10 @@ export const useFullWeatherInfoByCity = () => {
 
   const { isLoading: isCityByLocationLoading, cityByGeoLocation } = useCityByGeolocation();
 
-  const currentCity = searchText?.length ? searchText : (cityByGeoLocation ?? '');
+  const city = searchText?.length ? searchText : (cityByGeoLocation ?? '');
 
-  //TODO: move to queries folders
-  const { data: weatherForCurrentDay, isLoading: isCityLoading } = useQuery({
-    queryKey: ['weather_for_this_day', currentCity],
-    queryFn: () => fetchWeatherDataForThisDay(currentCity),
-    enabled: !!currentCity?.length,
-    // TODO:  Missed staleTime: 12000,
-  });
+  const { data: weatherForCurrentDay, isLoading: isCityLoading } =
+    useFetchWeatherForThisDayQuery(city);
 
   const isLoading =
     (isCityLoading && !weatherForCurrentDay) || (isCityByLocationLoading && !weatherForCurrentDay);
@@ -32,9 +25,9 @@ export const useFullWeatherInfoByCity = () => {
   }, [weatherForCurrentDay, searchText, addHistoryOfCitySearching]);
 
   return {
+    city,
     currentWeather,
     weatherForCurrentDay,
     isLoading,
-    currentCity,
   };
 };

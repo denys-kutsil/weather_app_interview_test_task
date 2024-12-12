@@ -1,9 +1,7 @@
 import React, { memo } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
-import { fetchWeatherDataForThisDay } from '@/api';
 import { LoadingStateWrapper } from '@/components';
+import { useFetchWeatherForThisDayQuery } from '@/hooks';
 import type { IWeatherResponse } from '@/types';
 
 interface IWeatherCardByCityProps {
@@ -12,11 +10,7 @@ interface IWeatherCardByCityProps {
 }
 
 const FetchWeatherByCityWrapper: React.FC<IWeatherCardByCityProps> = memo(({ city, Component }) => {
-  const { data: weatherForThisDay, isLoading } = useQuery({
-    queryKey: ['weather_for_this_day', city],
-    queryFn: () => fetchWeatherDataForThisDay(city),
-    // TODO:  Missed staleTime: 12000,
-  });
+  const { data: weatherForThisDay, isLoading } = useFetchWeatherForThisDayQuery(city);
 
   return (
     <LoadingStateWrapper isLinear isDataEnable={!!weatherForThisDay} isLoading={isLoading}>
